@@ -3,7 +3,7 @@ import {
   MulterExtendedOptions,
 } from 'nestjs-multer-extended';
 import { diskStorage } from 'multer';
-import { ReasonPhrases } from 'http-status-codes';
+import { ReasonPhrases, StatusCodes } from 'http-status-codes';
 import {
   ApiNotFoundResponse,
   ApiOkResponse,
@@ -21,8 +21,12 @@ import {
   Post,
   UseInterceptors,
 } from '@nestjs/common';
-import { IMPORT_FOLDER_PATH } from '@app/core/common/common.types';
+import {
+  ErrorMessages,
+  IMPORT_FOLDER_PATH,
+} from '@app/core/common/common.types';
 import { ApiFile } from '@app/core/common/decorators';
+import { ApiException } from '@app/core/exceptions/api.exception';
 
 interface RestHttpAction {
   path?: string;
@@ -77,6 +81,8 @@ export const RestPostUpload = ({
     UseInterceptors(
       FileInterceptor('file', {
         storage: diskStorage({ destination: IMPORT_FOLDER_PATH }),
+        fileFilter: (req, file, callback) =>
+          checkAllowedFileType(file.mimetype, callback),
       }),
     ),
     ApiFile('file'),
@@ -98,3 +104,22 @@ export const RestUploadWithTransform = (
     ),
     ApiFile('file'),
   );
+
+export const checkAllowedFileType = (mimeType: string, callback: any) => {
+  const allowedMimeTypes = [
+    'text/csv',
+    'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet',
+    'application/vnd.ms-excel',
+  ];
+
+  if (!allowedMimeTypes.includes(mimeType)) {
+    const error = new ApiException(
+      ErrorMessages.INVALID_FILE_TYPE,
+      StatusCodes.BAD_REQUEST,
+    );
+
+    return callback(error, false);
+  }
+
+  return callback(null, true);
+};

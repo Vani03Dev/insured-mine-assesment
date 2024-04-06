@@ -19,3 +19,14 @@ export enum Roles {
   CLIENT = 'CLIENT',
   ADMIN = 'ADMIN',
 }
+
+export const AllowedMimeTypes = {
+  CSV: 'text/csv',
+  SPREAD_SHEET:
+    'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet',
+  EXCEL: 'application/vnd.ms-excel',
+};
+
+export const ErrorMessages = {
+  INVALID_FILE_TYPE: 'Only text/csv or excel file are allowed!',
+};

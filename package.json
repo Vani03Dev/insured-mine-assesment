@@ -29,6 +29,7 @@
     "http-status-codes": "^2.3.0",
     "lodash": "^4.17.21",
     "mongoose": "^8.3.0",
+    "multer": "^1.4.5-lts.1",
     "nestjs-multer-extended": "^1.4.2",
     "reflect-metadata": "^0.2.0",
     "rxjs": "^7.8.1"
