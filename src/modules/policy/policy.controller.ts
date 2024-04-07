@@ -5,14 +5,18 @@ import {
 } from '@app/core/common/decorators';
 import { UploadedFile } from '@nestjs/common';
 import { PolicyService } from './policy.service';
-
+import { FileProcessorService } from '@app/core/shared/services/file-processor.service';
+import fs from 'fs';
 @RestController({ tag: 'Policy', path: 'policy' })
 export class PolicyController {
-  constructor(private readonly policyService: PolicyService) {}
+  constructor(
+    private readonly policyService: PolicyService,
+    private readonly fileProcessorService: FileProcessorService,
+  ) {}
 
   @RestPostUpload({ path: '/upload' })
-  public upload(@UploadedFile() file: any): void {
-    console.log(file);
+  public async upload(@UploadedFile() file: any): Promise<void> {
+    await this.fileProcessorService.parseCsv(file.path);
   }
 
   @RestGet({ path: '/' })

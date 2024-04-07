@@ -10,6 +10,7 @@ import {
   UserAccountSchema,
 } from '@app/database/schemas';
 import { PolicyController } from '@app/modules/policy/policy.controller';
+import { FileProcessorService } from '@app/core/shared/services/file-processor.service';
 
 @Module({
   imports: [
@@ -23,7 +24,7 @@ import { PolicyController } from '@app/modules/policy/policy.controller';
     ]),
   ],
   controllers: [PolicyController],
-  providers: [PolicyService],
+  providers: [PolicyService, FileProcessorService],
   exports: [PolicyModule],
 })
 export class PolicyModule {}
