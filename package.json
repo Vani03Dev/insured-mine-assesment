@@ -11,9 +11,11 @@
   "type": "commonjs",
   "license": "ISC",
   "dependencies": {
+    "csv-parser": "^3.0.0",
     "express": "^4.19.2",
     "module-alias": "^2.2.3",
-    "mongoose": "^8.3.1"
+    "mongoose": "^8.3.1",
+    "multer": "^1.4.5-lts.1"
   },
   "_moduleAliases": {
     "@app": "src",
@@ -22,6 +24,7 @@
   },
   "devDependencies": {
     "dotenv": "^16.4.5",
+    "lodash": "^4.17.21",
     "nodemon": "^3.1.0"
   }
 }

@@ -1,13 +1,15 @@
 const express = require("express");
+const multer = require("multer");
+const upload = multer({ dest: "uploads/" });
+const mongoose = require("mongoose");
 
 const app = express();
 
 app.use(express.json());
 require("dotenv").config();
-require("./src/database/database.config");
 
+// require("./src/database/models");
 app.get("/", (req, res) => res.sendFile(__dirname + "/index.html"));
-
 app.use("/categories", require("./src/controllers/policy.controller"));
 
 // Custom logger
@@ -18,6 +20,15 @@ app.use((req, res, next) => {
 });
 
 // Server configuration
-app.listen(process.env.PORT || 3001, () =>
-  console.debug(`===== Server started listening on port :${process.env.PORT}`)
-);
+
+const start = async () => {
+  try {
+    await mongoose.connect(process.env.MONGO_URI);
+    app.listen(3000, () => console.log("Server started on port 3000"));
+  } catch (error) {
+    console.error(error);
+    process.exit(1);
+  }
+};
+
+start();
