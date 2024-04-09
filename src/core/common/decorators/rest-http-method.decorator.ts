@@ -27,7 +27,7 @@ import {
 } from '@app/core/common/common.types';
 import { ApiFile } from '@app/core/common/decorators';
 import { ApiException } from '@app/core/exceptions/api.exception';
-
+import * as _ from 'lodash';
 interface RestHttpAction {
   path?: string;
   summary?: string;
@@ -80,9 +80,17 @@ export const RestPostUpload = ({
     RestPost({ path, summary }),
     UseInterceptors(
       FileInterceptor('file', {
-        storage: diskStorage({ destination: IMPORT_FOLDER_PATH }),
-        fileFilter: (req, file, callback) =>
-          checkAllowedFileType(file.mimetype, callback),
+        storage: diskStorage({
+          destination: IMPORT_FOLDER_PATH,
+          filename: (req, file, callback) => {
+            const originalname = file.originalname;
+            const [name, ext] = originalname.split('.');
+            callback(null, `${_.toLower(name.trim())}.${ext}`);
+          },
+        }),
+        fileFilter: (req, file, callback) => {
+          return checkAllowedFileType(file.mimetype, callback);
+        },
       }),
     ),
     ApiFile('file'),

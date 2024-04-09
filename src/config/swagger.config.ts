@@ -14,7 +14,7 @@ export const configureSwaggerConfig = (app: NestExpressApplication): void => {
   const docs = SwaggerModule.createDocument(
     app,
     new DocumentBuilder()
-      .setTitle(`Insure Mine | API Documentation [${process.env.STAGE}]`)
+      .setTitle(`Test API | API Documentation [${process.env.STAGE}]`)
       .setVersion('1.0.0')
       .addTag('Policy', 'Policy Endpoint')
       .addServer(process.env.SWAGGER_HOST, process.env.STAGE)

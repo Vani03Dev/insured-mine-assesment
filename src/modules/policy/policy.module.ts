@@ -8,6 +8,7 @@ import {
   CompanySchema,
   AgentSchema,
   UserAccountSchema,
+  Category,
 } from '@app/database/schemas';
 import { PolicyController } from '@app/modules/policy/policy.controller';
 import { FileProcessorService } from '@app/core/shared/services/file-processor.service';
@@ -18,13 +19,13 @@ import { FileProcessorService } from '@app/core/shared/services/file-processor.s
       { name: 'User', schema: UserSchema },
       { name: 'UserAccount', schema: UserAccountSchema },
       { name: 'Policy', schema: PolicySchema },
-      { name: 'Category', schema: CategorySchema },
+      { name: Category.name, schema: CategorySchema },
       { name: 'Company', schema: CompanySchema },
       { name: 'Agent', schema: AgentSchema },
     ]),
   ],
   controllers: [PolicyController],
   providers: [PolicyService, FileProcessorService],
-  exports: [PolicyModule],
+  exports: [PolicyModule, PolicyService],
 })
 export class PolicyModule {}

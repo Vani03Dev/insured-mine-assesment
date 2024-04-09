@@ -1,38 +1,26 @@
 import { Injectable } from '@nestjs/common';
-import csvParser from 'csv-parser';
-import { Worker, isMainThread, parentPort } from 'worker_threads';
-import fs from 'fs';
+import { Worker } from 'worker_threads';
+import { FileWorkerService } from '../workers/file.worker';
 
 @Injectable()
 export class FileProcessorService {
   constructor() {}
 
-  async parseCsv(filePath: string): Promise<any[]> {
-    return new Promise((resolve, reject) => {
-      if (isMainThread) {
-        const path = process.cwd() + `/${filePath}`;
-        const thread = new Worker(path, {
-          workerData: { filePath: path },
-        });
+  async parseCsv(file: Express.Multer.File): Promise<any> {
+    const worker = new Worker(
+      `${process.cwd()}/src/core/shared/workers/file.worker.ts`,
+      {
+        workerData: { filePath: file.path },
+      },
+    );
 
-        thread.on('message', (data) => resolve(data));
-        thread.on('error', (err) => reject(err));
-        thread.on('exit', (code) => {
-          console.log('COde ::', code);
-          if (code !== 0)
-            reject(new Error(`Worker stopped with exit code ${code}`));
-        });
-        // thread.postMessage(filePath);
-      } else {
-        parentPort.on('message', async (filePath: string) => {
-          const data: any[] = [];
-          fs.createReadStream(filePath)
-            .pipe(csvParser({ headers: true }))
-            .on('data', (row) => data.push(row))
-            .on('end', () => parentPort.postMessage(data))
-            .on('error', (err) => reject(err));
-        });
-      }
+    worker.on('message', (data) => data.data);
+    worker.on('error', (err) => {
+      console.error('Error ::', err);
+      return err;
+    });
+    worker.on('exit', (code) => {
+      if (code !== 0) console.error(`Worker stopped with exit code ${code}`);
     });
   }
 }
