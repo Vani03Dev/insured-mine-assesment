@@ -1,7 +1,6 @@
 const express = require("express");
 const app = express();
-const multer = require("multer");
-const upload = multer({ dest: "uploads/" });
+const upload = require("../shared/multer.config");
 const uploadService = require("../services/upload.service");
 
 app.post("/upload", upload.single("file"), uploadService.upload);

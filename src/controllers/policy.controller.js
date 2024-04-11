@@ -1,8 +1,8 @@
 const express = require("express");
 const app = express();
 const policyService = require("../services/policy.service");
-const upload = require("../shared/multer.config");
 
-app.get("/", policyService.categories);
+app.get("/", policyService.aggregatePolicies);
+app.get("/search", policyService.search);
 
 module.exports = app;

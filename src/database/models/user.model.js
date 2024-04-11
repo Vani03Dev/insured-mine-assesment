@@ -21,6 +21,7 @@ const userSchema = new Schema(
       required: true,
       enum: Object.values(["SUPERADMIN", "ADMIN"]),
     },
+    userName: { type: String, default: null },
     accountName: { type: String, default: null },
     policies: [{ type: mongoose.Types.ObjectId, ref: "Policy" }],
   },
@@ -31,9 +32,9 @@ const userSchema = new Schema(
   }
 );
 
-userSchema.virtual("userName").get(function () {
-  return `${this.firstName} ${this.lastName}`;
-});
+// userSchema.virtual("userName").get(function () {
+//   return `${this.firstName} ${this.lastName}`;
+// });
 
 const User = mongoose.models.users || mongoose.model("users", userSchema);
 

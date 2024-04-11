@@ -173,6 +173,7 @@ const upsertUsers = async (data) => {
         }) => ({
           firstName: firstname?.split(" ")[0],
           lastName: firstname?.split(" ")[1],
+          userName: firstname,
           dob: moment(dob).format("YYYY-MM-DD"),
           phoneNumber: phone,
           gender: "",
@@ -223,7 +224,7 @@ const upsertUsersPolicy = async (data) => {
               premiumAmount: res.premium_amount,
               type: res.policy_type,
               policyMode: +res.policy_mode,
-              userId: user ? user._id.toString() : null,
+              userId: user ? user.id : null,
               companyId: company ? company._id.toString() : null,
               categoryId: company ? company.categoryId.toString() : null,
               agentId: agent ? agent._id.toString() : null,
