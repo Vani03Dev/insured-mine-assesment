@@ -5,7 +5,7 @@ const userSchema = new Schema(
   {
     firstName: { type: String, required: true },
     lastName: { type: String, required: true },
-    dob: { type: Date, required: true },
+    dob: { type: String, required: true },
     address: { type: String, required: true },
     phoneNumber: { type: String, required: true },
     state: { type: String, required: true },
@@ -13,7 +13,7 @@ const userSchema = new Schema(
     email: { type: String, required: true },
     gender: {
       type: String,
-      required: true,
+      required: false,
       enum: Object.values(["MALE", "FEMALE"]),
     },
     userType: {
@@ -21,6 +21,7 @@ const userSchema = new Schema(
       required: true,
       enum: Object.values(["SUPERADMIN", "ADMIN"]),
     },
+    accountName: { type: String, default: null },
     policies: [{ type: mongoose.Types.ObjectId, ref: "Policy" }],
   },
   {
@@ -34,4 +35,6 @@ userSchema.virtual("userName").get(function () {
   return `${this.firstName} ${this.lastName}`;
 });
 
-module.exports = mongoose.model("User", userSchema);
+const User = mongoose.models.users || mongoose.model("users", userSchema);
+
+module.exports = { User };

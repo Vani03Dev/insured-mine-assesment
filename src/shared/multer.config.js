@@ -6,7 +6,11 @@ const storage = multer.diskStorage({
     cb(null, "uploads/");
   },
   filename: (req, file, cb) => {
-    cb(null, Date.now() + "-" + file.originalname);
+    const ext = path.extname(file.originalname);
+    const filename = `${Date.now()}-${file.originalname}${ext}`;
+
+    console.log("fileName ::", filename);
+    cb(null, filename);
   },
 });
 
@@ -15,6 +19,7 @@ const upload = multer({
   fileFilter: (req, file, callback) => checkFileType(file, callback),
 });
 
+//@function: Check file type
 function checkFileType(file, cb) {
   const filetypes = /csv|xlsx|xls/;
   const extname = filetypes.test(path.extname(file.originalname).toLowerCase());

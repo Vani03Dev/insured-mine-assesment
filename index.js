@@ -1,6 +1,4 @@
 const express = require("express");
-const multer = require("multer");
-const upload = multer({ dest: "uploads/" });
 const mongoose = require("mongoose");
 
 const app = express();
@@ -8,9 +6,10 @@ const app = express();
 app.use(express.json());
 require("dotenv").config();
 
-// require("./src/database/models");
 app.get("/", (req, res) => res.sendFile(__dirname + "/index.html"));
-app.use("/categories", require("./src/controllers/policy.controller"));
+
+app.use("/api/v1/policy", require("./src/controllers/policy.controller"));
+app.use("/api/v1", require("./src/controllers/upload.controller"));
 
 // Custom logger
 app.use((req, res, next) => {
@@ -20,15 +19,16 @@ app.use((req, res, next) => {
 });
 
 // Server configuration
-
-const start = async () => {
+(async () => {
   try {
     await mongoose.connect(process.env.MONGO_URI);
-    app.listen(3000, () => console.log("Server started on port 3000"));
+
+    console.debug("=== DATABASE CONNECTED SUCCESSFULLY ====");
+    app.listen(process.env.PORT, () => {
+      console.log(`Server started on port ${process.env.PORT}`);
+    });
   } catch (error) {
-    console.error(error);
+    console.error("Database connection failed:", error);
     process.exit(1);
   }
-};
-
-start();
+})();
